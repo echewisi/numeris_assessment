@@ -1,0 +1,22 @@
+server:
+  port: ${SERVER_PORT} # Fallback to environment variable
+
+database:
+  host: ${DB_HOST}      # Fallback to environment variable
+  port: ${DB_PORT}
+  user: ${DB_USER}
+  password: ${DB_PASSWORD}
+  dbname: ${DB_NAME}
+  dsn: ""
+
+redis:
+  host: ${REDIS_HOST}
+  port: ${REDIS_PORT}
+  password: ${REDIS_PASSWORD}
+
+email:
+  smtpHost: ${EMAIL_SMTP_HOST}
+  smtpPort: ${EMAIL_SMTP_PORT}
+  username: ${EMAIL_USERNAME}
+  password: ${EMAIL_PASSWORD}
+  from: ${EMAIL_FROM}
