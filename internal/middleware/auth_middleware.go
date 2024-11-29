@@ -6,8 +6,7 @@ import (
 	"strings"
 
 	"github.com/echewisi/numeris_assessment/internal/utils"
-
-	"github.com/dgrijalva/jwt-go"
+	"github.com/echewisi/numeris_assessment/pkg/config"
 )
 
 type ContextKey string
@@ -15,7 +14,7 @@ type ContextKey string
 const UserContextKey ContextKey = "user"
 
 // AuthMiddleware validates the JWT token in the Authorization header
-func AuthMiddleware(next http.Handler) http.Handler {
+func AuthMiddleware(cfg *config.Config, next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		authHeader := r.Header.Get("Authorization")
 		if authHeader == "" || !strings.HasPrefix(authHeader, "Bearer ") {
@@ -25,7 +24,15 @@ func AuthMiddleware(next http.Handler) http.Handler {
 
 		tokenString := strings.TrimPrefix(authHeader, "Bearer ")
 
-		claims, err := utils.ValidateJWT(tokenString)
+		// Convert config.JWTConfig to utils.JWTConfig
+		jwtConfig := utils.JWTConfig{
+			SecretKey: cfg.JWT.SecretKey,
+			Issuer:    cfg.JWT.Issuer,
+			ExpiresIn: cfg.JWT.ExpiresIn,
+		}
+
+		// Validate the token
+		claims, err := utils.ValidateToken(jwtConfig, tokenString)
 		if err != nil {
 			http.Error(w, "Unauthorized: "+err.Error(), http.StatusUnauthorized)
 			return
@@ -36,3 +43,4 @@ func AuthMiddleware(next http.Handler) http.Handler {
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})
 }
+

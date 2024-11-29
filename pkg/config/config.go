@@ -1,6 +1,7 @@
 package config
 
 import (
+    "time"
     "log"
     "github.com/joho/godotenv"
     "github.com/spf13/viper"
@@ -12,6 +13,7 @@ type Config struct {
     Database DatabaseConfig
     Redis    RedisConfig
 	Email    EmailConfig
+    JWT      JWTConfig
 }
 
 // ServerConfig holds server-related configurations
@@ -34,6 +36,13 @@ type RedisConfig struct {
     Host     string
     Port     string
     Password string
+}
+
+// JWTConfig holds JWT-related configurations
+type JWTConfig struct {
+	SecretKey string
+	Issuer    string
+	ExpiresIn time.Duration
 }
 
 type EmailConfig struct {
